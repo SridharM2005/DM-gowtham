@@ -412,37 +412,70 @@ function closeMobile() {
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
+  function animateCounter(el) {
+    if (el.dataset.animated === 'true') return;
+    el.dataset.animated = 'true';
 
-      const el     = entry.target;
-      const target = parseFloat(el.dataset.target);
-      const isDecimal = el.dataset.decimal;
-      const duration = prefersReduced ? 0 : 2000;
-      const start = Date.now();
+    const target = parseFloat(el.dataset.target);
+    const isDecimal = el.dataset.decimal;
 
-      function update() {
-        const elapsed  = Date.now() - start;
-        const progress = Math.min(elapsed / duration, 1);
-        /* Ease-out cubic */
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const value = target * eased;
+    if (prefersReduced || !target) {
+      el.textContent = isDecimal ? target.toFixed(parseInt(isDecimal)) : target.toLocaleString();
+      return;
+    }
 
-        el.textContent = isDecimal
-          ? value.toFixed(parseInt(isDecimal))
-          : Math.floor(value).toLocaleString();
+    const duration = 2000;
+    const start = Date.now();
 
-        if (progress < 1) requestAnimationFrame(update);
-        else el.textContent = isDecimal ? target.toFixed(parseInt(isDecimal)) : target.toLocaleString();
-      }
+    function update() {
+      const elapsed  = Date.now() - start;
+      const progress = Math.min(elapsed / duration, 1);
+      /* Ease-out cubic */
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = target * eased;
 
-      requestAnimationFrame(update);
-      observer.unobserve(el);
+      el.textContent = isDecimal
+        ? value.toFixed(parseInt(isDecimal))
+        : Math.floor(value).toLocaleString();
+
+      if (progress < 1) requestAnimationFrame(update);
+      else el.textContent = isDecimal ? target.toFixed(parseInt(isDecimal)) : target.toLocaleString();
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  // Observe the stat-item PARENT elements (which have data-aos).
+  // When AOS adds 'aos-animate' class (making the parent visible),
+  // we trigger the counter inside it.
+  const statItems = document.querySelectorAll('.stat-item');
+
+  if (statItems.length) {
+    const mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach(mutation => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          const el = mutation.target;
+          if (el.classList.contains('aos-animate')) {
+            const counter = el.querySelector('.counter');
+            if (counter) animateCounter(counter);
+          }
+        }
+      });
     });
-  }, { threshold: 0.5 });
 
-  counters.forEach(counter => observer.observe(counter));
+    statItems.forEach(item => {
+      // If already visible (no data-aos or already animated)
+      if (!item.dataset.aos || item.classList.contains('aos-animate')) {
+        const counter = item.querySelector('.counter');
+        if (counter) animateCounter(counter);
+      } else {
+        mutationObserver.observe(item, { attributes: true, attributeFilter: ['class'] });
+      }
+    });
+  } else {
+    // Fallback: animate all counters directly
+    counters.forEach(counter => animateCounter(counter));
+  }
 })();
 
 
@@ -1025,9 +1058,13 @@ document.querySelectorAll('.portfolio-card').forEach(card => {
   if (sessionStorage.getItem('exitIntentShown')) return;
 
   let triggered = false;
+  const startTime = Date.now();
 
   function openModal() {
     if (triggered) return;
+    // Dwell time: require at least 10 seconds on page before exit intent triggers
+    if (Date.now() - startTime < 10000) return;
+
     triggered = true;
     sessionStorage.setItem('exitIntentShown', 'true');
     modal.classList.add('open');
