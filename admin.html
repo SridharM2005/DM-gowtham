@@ -50,8 +50,12 @@
       --admin-modal-backdrop: rgba(15, 23, 42, 0.5);
     }
 
+    html {
+      background: #0B1120 !important;
+    }
+
     body {
-      background: #0B1120;
+      background: #0B1120 !important;
       font-family: var(--ff-sans);
       color: var(--clr-text-main);
       min-height: 100vh;
@@ -65,15 +69,13 @@
 
     /* Top Admin Header */
     .admin-nav {
-      background: var(--admin-card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--admin-border);
+      background: #0F172A;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       position: sticky;
       top: 0;
       z-index: 100;
       padding: 0.85rem 1.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
     .admin-nav-inner {
@@ -198,7 +200,7 @@
     }
 
     .stat-card-admin {
-      background: #111836;
+      background: #0F172A;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
       padding: 1.25rem 1.5rem;
@@ -254,7 +256,7 @@
 
     /* Controls Bar */
     .controls-bar {
-      background: #111836;
+      background: #0F172A;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
       padding: 1.1rem 1.25rem;
@@ -402,7 +404,7 @@
 
     /* Leads Table Container */
     .table-container {
-      background: #111836;
+      background: #0F172A;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
       overflow: hidden;
