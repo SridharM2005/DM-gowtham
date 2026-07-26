@@ -1,0 +1,14 @@
+# robots.txt — Lexi Crew Enterprises
+# Tells search engine crawlers what to index.
+# Update Sitemap URL to your actual domain.
+
+User-agent: *
+Allow: /
+
+# Block access to admin or private paths
+Disallow: /admin.html
+Disallow: /login.html
+Disallow: /admin/
+
+# Point to the sitemap
+Sitemap: https://www.lexicrewenterprises.com/sitemap.xml
