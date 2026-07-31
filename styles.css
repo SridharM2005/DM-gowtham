@@ -292,25 +292,34 @@ html {
   inset: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
+  z-index: 0;
   overflow: hidden;
   pointer-events: none;
 }
 
 .global-video-wrap video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.45;
-  filter: brightness(0.7) contrast(1.1);
+  opacity: 0.65;
+  filter: brightness(0.85) contrast(1.1);
+  z-index: 1;
 }
 
 .global-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 30%, rgba(7, 12, 31, 0.4) 0%, rgba(7, 12, 31, 0.85) 70%, #070C1F 100%);
-  z-index: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(7, 12, 31, 0.25) 0%, rgba(7, 12, 31, 0.65) 70%, rgba(7, 12, 31, 0.85) 100%);
+  z-index: 2;
   pointer-events: none;
+}
+
+/* Ensure sections float on top of video background */
+header, main, section, footer {
+  position: relative;
+  z-index: 10;
 }
 
 /* ── Preloader ── */
