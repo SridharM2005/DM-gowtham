@@ -1100,3 +1100,22 @@ document.querySelectorAll('.portfolio-card').forEach(card => {
     if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
   });
 })();
+
+/* Ensure background video plays automatically */
+(function initBgVideo() {
+  function tryPlayVideo() {
+    const bgVid = document.querySelector('.global-video-wrap video');
+    if (bgVid) {
+      bgVid.muted = true;
+      bgVid.playsInline = true;
+      bgVid.play().catch(() => {});
+    }
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    tryPlayVideo();
+  } else {
+    document.addEventListener('DOMContentLoaded', tryPlayVideo);
+    window.addEventListener('load', tryPlayVideo);
+  }
+})();
